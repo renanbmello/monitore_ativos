@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<html>
+<h1>{{ ativo }}:</h1>
+
+<table class="table table-striped table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Semana</th>
+            <th scope="col">Abertura</th>
+            <th scope="col">Fechamento</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for week in api_request %}
+        <tr>
+
+            <th scope="row">{{ week.week }} </a></th>
+            <td> R${{week.open}} </td>
+            <td>R${{week.close}}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}

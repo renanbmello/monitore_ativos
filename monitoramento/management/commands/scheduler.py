@@ -39,19 +39,19 @@ def update_price():
             
             if acao.monitor_type == 'buy':
 
-                if new_price >= float(acao.monitor_price):
+                if new_price <= float(acao.monitor_price):
                     send_mail(
                         'Compra de Ação!',
-                        'Seu ativo monitorado '+ str(acao.symbol) + ' atingiu o valor desejado para compra!',
+                        'Seu ativo monitorado '+ str(acao.symbol) + ' atingiu o valor:' + str(acao.monitor_price) + ' desejado para compra!',
                         'renanbmello@gmail.com',
                         ['renanbmello@gmail.com'],
                         fail_silently=False,
                     )
             else:
-                if new_price <= float(acao.monitor_price):
+                if new_price >= float(acao.monitor_price):
                     send_mail(
                         'Venda de Ação!',
-                        'Seu ativo monitorado '+ str(acao.symbol) + ' atingiu o valor desejado para venda!',
+                        'Seu ativo monitorado '+ str(acao.symbol) + ' atingiu o valor:'+ str(acao.monitor_price) + 'desejado para venda!',
                         'renanbmello@gmail.com',
                         ['renanbmello@gmail.com'],
                         fail_silently=False,

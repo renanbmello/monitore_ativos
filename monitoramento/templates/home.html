@@ -4,132 +4,130 @@
 
 <body>
 
-    <table class="table table-striped table table-bordered" >
-    <thead class="thead-dark">
-        <tr>
-            {% if bank  %}
+    <table class="table table-striped table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                {% if bank  %}
                 <th scope="col">Símbolo</th>
                 <th scope="col">Tipo</th>
                 <th scope="col">Preço Desejado</th>
                 <th scope="col">Último Preço</th>
-                <th scope="col">Monitoramento</th>     
-            {% else %}
+                <th scope="col">Monitoramento</th>
+                {% else %}
                 <th scope="col">Símbolo</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Preço</th>
                 <th scope="col">Variação</th>
-                <th scope="col">Monitoramento</th>  
-            {% endif %}
-        </tr>
-    </thead>
-    <tbody>
-           
-            {% for list_item in listAcao %}    
-                <tr>
-                    {% if bank  %}
-                        <th scope="row" ><a href= "{% url 'acao' %}">{{ list_item.symbol }} </a></th>
-                        <td>{% if list_item.monitor_type == 'buy' %} Compra {% else %} Venda {% endif %} </td>
-                        <td>R${{ list_item.monitor_price }}</td>
-                        <td>R${{ list_item.recent_price }}</td>
-                        <td>
-                            <button class="btn btn-link" type="button" data-target="#myModal" data-toggle="modal" > {% if exists %} Deixar de monitorar {% else %} Monitorar {% endif %} </a>
-                        </td>    
-    
-                    {% else %}
-                        <th scope="row" ><a href= "{% url 'acao' %}">{{ list_item.symbol }} </a></th>
-                        <td>{{ list_item.name }}</td>
-                        <td>R${{ list_item.price }}</td>
-                        <td>R${{ list_item.change_percent }}</td>
-                        <td>
-                            <button class="btn btn-link" type="button" data-target="#myModal" data-toggle="modal" > {% if exists %} Deixar de monitorar {% else %} Monitorar {% endif %} </a>
-                        </td>    
-                    {% endif %}
-                </tr>   
-                
-                <div id="myModal" class="modal fade" role="dialog">
-                    <div class="modal-dialog">
-                        {% if exists %} 
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Excluir Ativo</h4>
-                                    
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <p class="text-left">Você deseja excluir o monitoramento este ativo?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button  type="submit" class="btn btn-light" data-dismiss="modal">Num quero</button>
-                                    <form action="{% url 'delete' list_item.symbol %}" method="post">
-                                        {% csrf_token %}
-                                        <button  type="submit" class="btn btn-danger">Excluir</button>
-                                    </form>
-                                </div>
-                            </div>
+                <th scope="col">Monitoramento</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
 
-                        {% else %} 
+            {% for list_item in listAcao %}
+            <tr>
+                {% if bank  %}
+                <th scope="row"><a href="{% url 'acao_detail' list_item.symbol %}">{{ list_item.symbol }} </a></th>
+                <td>{% if list_item.monitor_type == 'buy' %} Compra {% else %} Venda {% endif %} </td>
+                <td>R${{ list_item.monitor_price }}</td>
+                <td>R${{ list_item.recent_price }}</td>
+                <td>
+                    <button class="btn btn-link" type="button" data-target="#myModal" data-toggle="modal">
+                        {% if exists %} Deixar de monitorar {% else %} Monitorar {% endif %} </a>
+                </td>
 
-                        <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Monitorar Ativo</h4>
-                                    
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <form action="{% url 'acao' %}" class="form-inline" method="POST"> 
-                                    {% csrf_token %}
-                                    <div class="modal-body">
-                                        
-                                        <div class="form-group">
-                                            <label for="disabledTextInput">Nome</label>
-                                            <input type="text" readonly="readonly" class="form-control" value="{{ list_item.symbol }}" name="symbol">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="disabledTextInput">Último valor</label>
-                                            <input type="text" readonly="readonly" class="form-control" value="{{ list_item.price }}" name="recent_price">
-                                        </div>
-                                        
-                                        <label for="inputCity">Valor de desejado:</label>
-                                                                    
-                                        <input type="number" step="any" class="form-control" placeholder="Valor" name="monitor_price">
-                                    
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" id="customRadio1" name="monitor_type" value="buy" class="custom-control-input">
-                                            <label class="custom-control-label" for="customRadio1">Compra</label>
-                                        </div>
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" id="customRadio2" name="monitor_type" value="sell" class="custom-control-input">
-                                            <label class="custom-control-label" for="customRadio2">Venda</label>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button  type="submit" class="btn btn-success">Confirmar</button>
-                                    </div>
-                                </form> 
-                            </div>
-                
-                        {% endif %}
-                        
+                {% else %},
+                <th scope="row">
+                    <form action="{% url 'acao_detail' list_item.symbol %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link">{{ list_item.symbol }}</button>
+                    </form>
+                </th>
+                <td>{{ list_item.name }}</td>
+                <td>R${{ list_item.price }}</td>
+                <td>R${{ list_item.change_percent }}</td>
+                <td>
+                    <button class="btn btn-link" type="button" data-target="#myModal" data-toggle="modal">
+                        {% if exists %} Deixar de monitorar {% else %} Monitorar {% endif %} </a>
+                </td>
+                {% endif %}
+            </tr>
+
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    {% if exists %}
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Excluir Ativo</h4>
+
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-left">Você deseja excluir o monitoramento este ativo?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-light" data-dismiss="modal">Num quero</button>
+                            <form action="{% url 'delete' list_item.symbol %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Excluir</button>
+                            </form>
+                        </div>
                     </div>
-                </div>       
+
+                    {% else %}>
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Monitorar Ativo</h4>
+
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <form action="{% url 'acao' %}" class="form-inline" method="POST">
+                            {% csrf_token %}
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label for="disabledTextInput">Nome</label>
+                                    <input type="text" readonly="readonly" class="form-control"
+                                        value="{{ list_item.symbol }}" name="symbol">
+                                </div>
+                                <div class="form-group">
+                                    <label for="disabledTextInput">Último valor</label>
+                                    <input type="text" readonly="readonly" class="form-control"
+                                        value="{{ list_item.price }}" name="recent_price">
+                                </div>
+
+                                <label for="inputCity">Valor de desejado:</label>
+
+                                <input type="number" step="any" class="form-control" placeholder="Valor"
+                                    name="monitor_price">
+
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="customRadio1" name="monitor_type" value="buy"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="customRadio1">Compra</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="customRadio2" name="monitor_type" value="sell"
+                                        class="custom-control-input">
+                                    <label class="custom-control-label" for="customRadio2">Venda</label>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Confirmar</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
             {% endfor %}
-            
-    </tbody>
+
+        </tbody>
     </table>
-    
-
-   
-{% endblock %}
-    <!-- {% if api %}
-        {%if api == "Erro"%}
-            Simbolo não existe ou está escrito errado!
-        {% else %}
-           <h1> {{ api.symbol }}</h1><br />
-            {{ api.name }}
-            R$:{{ api.price }}<br />
-            Variação:  {{ api.change_percent }}% <br />
-        {% endif %}
-    {% endif %} -->
-
+    {% endblock %}
 </body>
